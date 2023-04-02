@@ -1,0 +1,47 @@
+{
+    "name": "node-aria2",
+    "version": "1.0.0-rc2",
+    "description": "Aria2 RPC client for Node.js",
+    "main": "dist/index.js",
+    "author": "EternalC0der <s.eternalcoder@gmail.com>",
+    "license": "MIT",
+    "keywords": [
+        "aria2",
+        "download",
+        "downloadManager",
+        "HTTPS",
+        "HTTP",
+        "SFTP",
+        "FTP",
+        "BitTorrent",
+        "torrent",
+        "MetaLink",
+        "magnet"
+    ],
+    "files": [
+        "/dist"
+    ],
+    "scripts": {
+        "build": "npx tsc",
+        "prepare": "yarn build",
+        "lint": "eslint --ext .js,.ts . --ignore-path ../.gitignore",
+        "format": "prettier --ignore-path ../.gitignore --write \"**/*.+(js|ts|json)\""
+    },
+    "repository": "https://github.com/EternalC0der/node-aria2.git",
+    "devDependencies": {
+        "@types/node": "^18.15.11",
+        "@types/ws": "^8.5.4",
+        "@typescript-eslint/eslint-plugin": "^5.57.0",
+        "@typescript-eslint/parser": "^5.57.0",
+        "eslint": "^8.37.0",
+        "eslint-config-prettier": "^8.8.0",
+        "eslint-plugin-import": "^2.27.5",
+        "eslint-plugin-prettier": "^4.2.1",
+        "prettier": "^2.8.7",
+        "typescript": "^5.0.3"
+    },
+    "dependencies": {
+        "node-fetch": "^3.3.1",
+        "ws": "^8.13.0"
+    }
+}
