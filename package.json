@@ -1,6 +1,6 @@
 {
     "name": "node-aria2",
-    "version": "1.0.0-rc5",
+    "version": "1.0.0",
     "description": "Aria2 RPC client for Node.js",
     "main": "dist/index.js",
     "author": "EternalC0der <s.eternalcoder@gmail.com>",
