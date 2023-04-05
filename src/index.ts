@@ -1,5 +1,5 @@
 import JSONRPCClient from './JSONRPCClient'
-import { Options, Message } from './types'
+import { Message } from './types'
 
 function prefix(str: string) {
     if (!str.startsWith('system.') && !str.startsWith('aria2.')) {
@@ -14,9 +14,6 @@ function unprefix(str: string) {
 }
 
 export class Aria2RPC extends JSONRPCClient {
-    constructor(options: Options) {
-        super(options)
-    }
     withSecret(parameters: any[]) {
         let params = this.options.secret ? ['token:' + this.options.secret] : []
         if (Array.isArray(parameters)) {
@@ -32,11 +29,11 @@ export class Aria2RPC extends JSONRPCClient {
         return super._onnotification(notification)
     }
 
-    async call(method: string, ...params: any[]) {
+    call(method: string, ...params: any[]) {
         return super.call(prefix(method), this.withSecret(params))
     }
 
-    async multicall(calls: [string, any[]][]) {
+    multicall(calls: [string, any[]][]) {
         const multi = [
             calls.map(([method, ...params]) => {
                 return { methodName: prefix(method), params: this.withSecret(params) }
@@ -45,7 +42,7 @@ export class Aria2RPC extends JSONRPCClient {
         return super.call('system.multicall', multi)
     }
 
-    async batch(calls: [string, any[]][]) {
+    batch(calls: [string, any[]][]) {
         return super.batch(calls.map(([method, ...params]) => [prefix(method), this.withSecret(params)]))
     }
 

@@ -1,26 +1,31 @@
 import { EventEmitter } from 'events'
-import { WebSocket } from 'ws'
+import { WebSocket as nodeWebSocket } from 'ws'
 import { RequestInfo, RequestInit } from 'node-fetch'
-const fetch = (url: RequestInfo, init?: RequestInit) => import('node-fetch').then(({ default: fetch }) => fetch(url, init))
 
 import Deferred from './Deferred'
 import promiseEvent from './promiseEvent'
 import JSONRPCError from './JSONRPCError'
 
 import { Message, Options } from './types'
+const fetch = (url: RequestInfo, init?: RequestInit) => import('node-fetch').then(({ default: fetch }) => fetch(url, init))
 
 export default class JSONRPCClient extends EventEmitter {
     deferreds: { [key: number]: Deferred }
     lastId: number
     options: Options
-    fetch: typeof fetch
-    socket?: WebSocket
-    constructor(options: Options) {
+    socket?: any
+    WebSocket: typeof nodeWebSocket
+    fetch: any
+    constructor(options: Options, engines?: { WebSocket?: any; fetch?: any }) {
         super()
         this.deferreds = {}
         this.lastId = 0
         this.options = options
-        this.fetch = fetch.bind(this)
+
+        if (engines?.WebSocket) this.WebSocket = engines?.WebSocket
+        else this.WebSocket = nodeWebSocket
+        if (engines?.fetch) this.fetch = engines?.fetch.bind(this)
+        else this.fetch = fetch.bind(this)
     }
 
     id() {
@@ -38,7 +43,7 @@ export default class JSONRPCClient extends EventEmitter {
                 else resolve()
             }
             this.socket?.send(JSON.stringify(message), cb)
-            if (global.WebSocket && this.socket instanceof global.WebSocket) cb()
+            if (this.WebSocket && this.socket instanceof this.WebSocket) cb()
         })
     }
 
@@ -55,7 +60,7 @@ export default class JSONRPCClient extends EventEmitter {
         response
             .json()
             .then((msg: any) => this._onmessage(msg))
-            .catch((err) => {
+            .catch((err: any) => {
                 this.emit('error', err)
             })
 
@@ -99,7 +104,7 @@ export default class JSONRPCClient extends EventEmitter {
         return promise
     }
 
-    async _send(message: Partial<Message> | Partial<Message>[]) {
+    _send(message: Partial<Message> | Partial<Message>[]) {
         this.emit('output', message)
 
         const { socket } = this
@@ -136,13 +141,13 @@ export default class JSONRPCClient extends EventEmitter {
         // else this._onrequest(message)
     }
 
-    async open() {
-        const socket = (this.socket = new WebSocket(this.url('ws')))
+    open() {
+        const socket = (this.socket = new this.WebSocket(this.url('ws')))
 
         socket.onclose = (...args: any[]) => {
             this.emit('close', ...args)
         }
-        socket.onmessage = (event) => {
+        socket.onmessage = (event: any) => {
             let message
             try {
                 message = JSON.parse(event.data.toString())
@@ -162,7 +167,7 @@ export default class JSONRPCClient extends EventEmitter {
         return promiseEvent(this, 'open')
     }
 
-    async close() {
+    close() {
         const { socket } = this
         socket?.close()
         return promiseEvent(this, 'close')

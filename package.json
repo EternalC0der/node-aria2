@@ -1,6 +1,6 @@
 {
     "name": "node-aria2",
-    "version": "1.0.0-rc4",
+    "version": "1.0.0-rc5",
     "description": "Aria2 RPC client for Node.js",
     "main": "dist/index.js",
     "author": "EternalC0der <s.eternalcoder@gmail.com>",
@@ -41,6 +41,7 @@
         "typescript": "^5.0.3"
     },
     "dependencies": {
+        "events": "^3.3.0",
         "node-fetch": "^3.3.1",
         "ws": "^8.13.0"
     }
