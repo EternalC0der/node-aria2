@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events'
 import { WebSocket } from 'ws'
-import fetch from 'node-fetch'
+import { RequestInfo, RequestInit } from 'node-fetch'
+const fetch = (url: RequestInfo, init?: RequestInit) => import('node-fetch').then(({ default: fetch }) => fetch(url, init))
 
 import Deferred from './Deferred'
 import promiseEvent from './promiseEvent'
