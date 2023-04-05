@@ -13,7 +13,7 @@ function unprefix(str: string) {
     return suffix || str
 }
 
-export default class Aria2 extends JSONRPCClient {
+export class Aria2RPC extends JSONRPCClient {
     constructor(options: Options) {
         super(options)
     }
