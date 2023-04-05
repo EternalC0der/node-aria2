@@ -1,6 +1,4 @@
-import JSONRPCClient from './JSONRPCClient'
-
-export default function promiseEvent(target: JSONRPCClient, event: string): Promise<any> {
+export default function promiseEvent(target: any, event: string): Promise<any> {
     return new Promise((resolve, reject) => {
         function cleanup() {
             target.removeListener(event, onEvent)
