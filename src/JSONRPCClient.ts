@@ -1,13 +1,11 @@
 import { EventEmitter } from 'events'
 import { WebSocket as nodeWebSocket } from 'ws'
-import { RequestInfo, RequestInit } from 'node-fetch'
 
 import Deferred from './Deferred'
 import promiseEvent from './promiseEvent'
 import JSONRPCError from './JSONRPCError'
 
 import { Message, Options } from './types'
-const fetch = (url: RequestInfo, init?: RequestInit) => import('node-fetch').then(({ default: fetch }) => fetch(url, init))
 
 export default class JSONRPCClient extends EventEmitter {
     deferreds: { [key: number]: Deferred }
