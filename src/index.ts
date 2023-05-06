@@ -1,5 +1,5 @@
 import JSONRPCClient from './JSONRPCClient'
-import { Message } from './types'
+import { Message, aria2Methods } from './types'
 
 function prefix(str: string) {
     if (!str.startsWith('system.') && !str.startsWith('aria2.')) {
@@ -29,11 +29,11 @@ export class Aria2RPC extends JSONRPCClient {
         return super._onnotification(notification)
     }
 
-    call(method: string, ...params: any[]) {
+    call(method: aria2Methods, ...params: any[]) {
         return super.call(prefix(method), this.withSecret(params))
     }
 
-    multicall(calls: [string, any[]][]) {
+    multicall(calls: [aria2Methods, any[]][]) {
         const multi = [
             calls.map(([method, ...params]) => {
                 return { methodName: prefix(method), params: this.withSecret(params) }
@@ -42,7 +42,7 @@ export class Aria2RPC extends JSONRPCClient {
         return super.call('system.multicall', multi)
     }
 
-    batch(calls: [string, any[]][]) {
+    batch(calls: [aria2Methods, any[]][]) {
         return super.batch(calls.map(([method, ...params]) => [prefix(method), this.withSecret(params)]))
     }
 
